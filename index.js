@@ -38,11 +38,36 @@ app.get('/api/customers', async(req, res)=>{
 });
 
 // Getting customers data by passing additional info to the url
-app.get('/api/customers/:id/:test', async(req, res)=>{
-    res.json({
+app.get('/api/customers/:id', async(req, res)=>{
+    console.log({
         requestParams: req.params,
         requestQuery: req.query 
     });
+
+    
+    try{
+        //To grab that Id from the url
+        const {id: customerId} = req.params; //Destructuring the id from the url 
+        console.log(customerId);
+
+        //Alternatively, you can also do this
+        const customerId2 = req.params.id; 
+        console.log(customerId2);
+
+        //To make a request to the database to find a customer with the id
+        const customer = await Customers.findById(customerId);
+        console.log(customer);
+
+        //If the customer is not found, return a 404 status code
+        if(!customer){
+            return res.status(404).json({Error: 'Customer not found'});
+        }else {
+            res.json({customer});
+        }
+    }catch(err){
+        res.status(500).json({Error: err.message});
+    }
+    
 })
 
 app.post('/api/customers/save', async(req, res)=>{
