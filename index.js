@@ -11,7 +11,7 @@ if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();     
 }
 const PORT = process.env.PORT || 4000;
-const CONNECTION = process.env.CONNECTION
+const CONNECTION = process.env.CONNECTION_STRING;
 
  
 
@@ -100,7 +100,7 @@ app.post('/api/customers/save', async(req, res)=>{
 
 const start = async()=>{
     try {
-        await mongoose.connect(CONNECTION);
+        await mongoose.connect(CONNECTION)
 
         app.listen(PORT, ()=> {
             console.log('App running on port:' + PORT);
