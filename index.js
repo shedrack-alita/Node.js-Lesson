@@ -70,6 +70,18 @@ app.get('/api/customers/:id', async(req, res)=>{
     
 })
 
+//To save a customer's data to the database
+app.post('/api/customers/save', async(req, res)=>{
+    console.log(req.body);
+    const customers = new Customers(req.body);
+    try {
+        await customers.save();
+        res.status(200).json({customers});
+    } catch (err) {
+        res.status(500).json({Error: err.message});
+    }
+})
+
 //To Update a customer's data in the database by passing additional (like an id) info to the url
 app.put('/api/customers/update/:id', async(req, res)=>{
     try{
@@ -82,16 +94,18 @@ app.put('/api/customers/update/:id', async(req, res)=>{
     }
 })
 
-app.post('/api/customers/save', async(req, res)=>{
-    console.log(req.body);
-    const customers = new Customers(req.body);
-    try {
-        await customers.save();
-        res.status(200).json({customers});
-    } catch (err) {
-        res.status(500).json({Error: err.message});
+//To delete a customer's data in the database by passing additional (like an id) info to the url
+app.delete('/api/customers/delete/:id', async(req, res)=>{
+    try{
+        const customerId = req.params.id;
+        const result = await Customers.deleteOne({_id: customerId});
+        console.log(result);
+        res.json({deletedCount: result.deletedCount});
+    }catch(err){
+        res.status(500).json({Error: 'An error occured while deleting the customer'});
     }
-})
+});
+
 
 
 
