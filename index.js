@@ -37,7 +37,7 @@ app.get('/api/customers', async(req, res)=>{
     }
 });
 
-// Getting customers data by passing additional info to the url
+// Getting customers data by passing additional (like an id) info to the url
 app.get('/api/customers/:id', async(req, res)=>{
     console.log({
         requestParams: req.params,
@@ -68,6 +68,18 @@ app.get('/api/customers/:id', async(req, res)=>{
         res.status(500).json({Error: err.message});
     }
     
+})
+
+//To Update a customer's data in the database by passing additional (like an id) info to the url
+app.put('/api/customers/update/:id', async(req, res)=>{
+    try{
+        const customerId = req.params.id;
+        const result = await Customers.replaceOne({_id: customerId}, req.body);
+        console.log(result);
+        res.json({updatedCount: result.modifiedCount});
+    }catch(err){
+        res.status(500).json({Error: 'An error occured while updating the customer'});
+    }
 })
 
 app.post('/api/customers/save', async(req, res)=>{
